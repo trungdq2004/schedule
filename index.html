@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Thời Khóa Biểu Học Tập</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html-to-image để xuất ảnh -->
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased p-4 md:p-8">
+
+    <div class="max-w-7xl mx-auto space-y-8">
+        
+        <!-- Header chính -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-3xl shadow-sm border border-slate-100 gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900">Thời khóa biểu</h1>
+                    <p class="text-xs text-slate-400">Lên lịch học Sáng / Chiều trực quan</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                <button id="openSettingsBtn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-2xl text-sm font-semibold transition flex items-center gap-2">
+                    Cài đặt buổi & Giờ
+                </button>
+                <button id="exportBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-2xl text-sm font-semibold shadow-lg shadow-indigo-100 transition flex items-center gap-2">
+                    Lưu thời khóa biểu
+                </button>
+            </div>
+        </header>
+
+        <!-- Thanh điều khiển: Chọn khối lớp và các ngày trong tuần -->
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div class="w-full md:w-72 space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">CHỌN KHỐI / CẤP HỌC</label>
+                <select id="classSelect" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500">
+                    <optgroup label="Tiểu học">
+                        <option value="1">Lớp 1</option><option value="2">Lớp 2</option><option value="3">Lớp 3</option><option value="4">Lớp 4</option><option value="5">Lớp 5</option>
+                    </optgroup>
+                    <optgroup label="THCS">
+                        <option value="6">Lớp 6</option><option value="7">Lớp 7</option><option value="8">Lớp 8</option><option value="9">Lớp 9</option>
+                    </optgroup>
+                    <optgroup label="THPT">
+                        <option value="10">Lớp 10</option><option value="11">Lớp 11</option><option value="12">Lớp 12</option>
+                    </optgroup>
+                    <optgroup label="Khác">
+                        <option value="dai-hoc">Đại học / Cao đẳng</option><option value="tu-do">Tự do / Khác</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="w-full md:w-auto overflow-x-auto pb-2 md:pb-0">
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">NGÀY HỌC TRONG TUẦN (Bấm để xóa/thêm)</label>
+                <div class="flex items-center gap-2">
+                    <button class="day-chip active" data-day="2">T2</button>
+                    <button class="day-chip active" data-day="3">T3</button>
+                    <button class="day-chip active" data-day="4">T4</button>
+                    <button class="day-chip active" data-day="5">T5</button>
+                    <button class="day-chip active" data-day="6">T6</button>
+                    <button class="day-chip active" data-day="7">T7</button>
+                    <button class="day-chip active" data-day="8">CN</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Khu vực hiển thị bảng TKB chính (Vùng sẽ chụp ảnh) -->
+        <div id="captureArea" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <h3 id="scheduleTitle" class="text-lg font-bold text-slate-900">Lịch học chi tiết Sáng — Chiều</h3>
+                    <button type="button" id="editTitleBtn" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition">Sửa tên</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                <table class="w-full border-collapse min-w-[950px] bg-white">
+                    <thead>
+                        <tr class="bg-slate-50 text-left" id="tableHeaderRow">
+                            <th class="p-3 text-xs font-bold text-slate-400 uppercase w-50 text-center" colspan="2">Tiết<br><span class="font-normal text-[10px]">Thời gian</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tkbBody">
+                        <!-- Render bằng Javascript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Cài đặt Số tiết & Khung giờ Sáng/Chiều -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-3xl shadow-2xl space-y-6 border border-slate-100 max-h-[92vh] overflow-y-auto">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-900">Cài đặt tiết & Khung giờ</h3>
+                <button type="button" id="closeSettingsModalBtn" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center font-bold hover:bg-slate-200">✕</button>
+            </div>
+            
+            <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 space-y-2">
+                        <label class="block text-xs font-bold text-indigo-900 uppercase">Buổi Sáng (Số tiết)</label>
+                        <input type="number" id="inputMorningCount" min="0" max="6" value="4" class="w-full p-2.5 bg-white border border-indigo-200 rounded-xl text-sm font-bold text-indigo-700 outline-none">
+                    </div>
+                    <div class="bg-orange-50/50 p-4 rounded-2xl border border-orange-100 space-y-2">
+                        <label class="block text-xs font-bold text-orange-900 uppercase">Buổi Chiều (Số tiết)</label>
+                        <input type="number" id="inputAfternoonCount" min="0" max="6" value="4" class="w-full p-2.5 bg-white border border-orange-200 rounded-xl text-sm font-bold text-orange-700 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-xs font-bold uppercase text-slate-400 mb-2">Tùy chỉnh thời gian từng tiết</h4>
+                    <div id="periodTimesConfig" class="space-y-2 max-h-96 overflow-y-auto pr-1">
+                        <!-- Sinh tự động bằng JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" id="saveSettingsBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-sm font-semibold shadow-lg shadow-indigo-100 transition">Lưu cấu hình thời gian</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal thêm/sửa/xóa môn học -->
+    <div id="subjectModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl space-y-4 border border-slate-100">
+            <h3 class="text-lg font-bold text-slate-900" id="modalTitle">Thêm môn học</h3>
+            
+            <div class="flex bg-slate-100 p-1 rounded-2xl">
+                <button type="button" id="tabPredefined" class="flex-1 py-2 text-xs font-bold rounded-xl bg-white text-indigo-600 shadow-sm transition">Chọn môn có sẵn</button>
+                <button type="button" id="tabCustom" class="flex-1 py-2 text-xs font-bold rounded-xl text-slate-500 transition">Tự ghi tên môn</button>
+            </div>
+
+            <form id="modalForm" class="space-y-4">
+                <div id="predefinedSection">
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Chọn môn theo lớp</label>
+                    <select id="selectPresetSubject" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-indigo-500"></select>
+                </div>
+
+                <div id="customSection" class="hidden">
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Tên môn học</label>
+                    <input type="text" id="inputSubjectName" placeholder="VD: Toán, Ngữ văn..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Tiết bắt đầu</label>
+                        <input type="number" id="inputStart" min="1" max="10" value="1" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Số tiết kéo dài</label>
+                        <input type="number" id="inputDuration" min="1" max="5" value="1" required class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Ghi chú</label>
+                    <textarea id="inputSubjectNote" rows="2" maxlength="120" placeholder="VD: Mang sách bài tập, học phòng 203..." class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm outline-none resize-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-400 mb-1">Màu sắc hiển thị</label>
+                    <div class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <div class="flex items-center gap-2.5 flex-wrap">
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #4f46e5;" onclick="selectPresetColor('#4f46e5')"></button>
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #2563eb;" onclick="selectPresetColor('#2563eb')"></button>
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #0891b2;" onclick="selectPresetColor('#0891b2')"></button>
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #16a34a;" onclick="selectPresetColor('#16a34a')"></button>
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #ca8a04;" onclick="selectPresetColor('#ca8a04')"></button>
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #ea580c;" onclick="selectPresetColor('#ea580c')"></button>
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #db2777;" onclick="selectPresetColor('#db2777')"></button>
+                            <button type="button" class="w-7 h-7 rounded-full transition-transform hover:scale-110 shadow-sm" style="background-color: #9333ea;" onclick="selectPresetColor('#9333ea')"></button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="relative w-9 h-9 rounded-full overflow-hidden shadow-inner border-2 border-white ring-2 ring-slate-200 cursor-pointer shrink-0">
+                                <input type="color" id="inputCustomColor" value="#4f46e5" class="absolute -top-2 -left-2 w-16 h-16 cursor-pointer opacity-0">
+                                <div id="colorPreview" class="w-full h-full bg-indigo-600"></div>
+                            </div>
+                            <div class="text-[11px] text-slate-500 leading-relaxed">
+                                Chọn nhanh mẫu màu hoặc bấm vào vòng tròn để tùy chỉnh mã màu.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <button type="button" id="deleteSubjectBtn" class="px-4 py-2.5 rounded-2xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition hidden">Xóa môn</button>
+                    <div class="flex items-center gap-2 ml-auto">
+                        <button type="button" id="closeModalBtn" class="px-5 py-2.5 rounded-2xl text-sm font-semibold text-slate-500 hover:bg-slate-100 transition">Hủy</button>
+                        <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-sm font-semibold shadow-lg shadow-indigo-100 transition">Lưu môn học</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Alert Modal -->
+    <div id="customAlertModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl space-y-4 border border-slate-100 text-center">
+            <div class="space-y-1">
+                <h3 id="alertTitle" class="text-lg font-bold text-slate-900">Thông báo</h3>
+                <p id="alertMessage" class="text-xs text-slate-500 leading-relaxed"></p>
+            </div>
+            <div id="alertButtons" class="flex gap-2 pt-2"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

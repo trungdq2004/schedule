@@ -1,0 +1,285 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.text-xs {
+    font-size: 0.9rem !important;
+    line-height: 1.35rem !important;
+}
+
+.text-sm {
+    font-size: 1rem !important;
+    line-height: 1.5rem !important;
+}
+
+.text-lg {
+    font-size: 1.35rem !important;
+    line-height: 1.8rem !important;
+}
+
+.text-xl {
+    font-size: 1.6rem !important;
+    line-height: 2rem !important;
+}
+
+table .text-\[10px\] {
+    font-size: 0.8rem !important;
+    line-height: 1.1rem !important;
+}
+
+table .text-\[11px\] {
+    font-size: 0.85rem !important;
+    line-height: 1.2rem !important;
+}
+
+.day-chip {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8fafc;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.day-chip.active {
+    background-color: #0f766e;
+    color: #ffffff;
+    border-color: #0f766e;
+    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+}
+
+.day-chip:not(.active) {
+    opacity: 0.5;
+}
+
+/* QUAN TRỌNG: Ép bảng và hàng co lại sát nội dung, không cho dãn thênh thang */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+    height: auto !important;
+}
+
+tr {
+    height: auto !important;
+}
+
+th {
+    border: 1px solid #e2e8f0;
+    padding: 8px 6px;
+    vertical-align: middle;
+}
+
+#captureArea table th:first-child {
+    width: 52px;
+}
+
+#captureArea table th:nth-child(2) {
+    width: 90px;
+}
+
+#captureArea > .overflow-x-auto {
+    border: 1px solid #94a3b8 !important;
+    border-radius: 16px !important;
+    background: #ffffff;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+@media (min-width: 768px) {
+    #captureArea > .overflow-x-auto {
+        overflow: hidden;
+    }
+}
+
+td {
+    border: 1px solid #e2e8f0;
+    padding: 4px !important; /* Thu nhỏ khoảng đệm của ô */
+    height: auto !important;
+    vertical-align: middle;
+}
+
+/* Xoay dọc chữ cho ô Sáng / Chiều */
+.vertical-text {
+    white-space: nowrap;
+    transform: rotate(-90deg);
+    letter-spacing: 2px;
+}
+
+.add-subject-label {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.add-subject-cell:hover .add-subject-label {
+    opacity: 1;
+}
+
+td {
+    height: 52px !important;
+    max-height: 52px !important;
+    overflow: hidden !important;
+    padding: 2px !important;
+}
+
+#captureArea th,
+#captureArea td {
+    border-color: #94a3b8;
+}
+
+.tkb-empty-cell,
+.tkb-subject-cell {
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.tkb-empty-cell {
+    background: transparent;
+    border-color: transparent !important;
+    box-shadow: none;
+}
+
+.tkb-empty-cell:hover {
+    background: #eef2ff;
+    border-color: #6366f1 !important;
+}
+
+.tkb-subject-cell {
+    line-height: 1.25;
+}
+
+.session-divider {
+    border-top: 2px solid #0f766e !important;
+}
+
+:root {
+    --theme-primary: #0f766e;
+    --theme-primary-dark: #115e59;
+    --theme-primary-soft: #ccfbf1;
+    --theme-border: #cbdedb;
+    --theme-surface: #ffffff;
+    --theme-muted: #64748b;
+}
+
+body.bg-slate-50 {
+    background-color: #f2f7f6 !important;
+}
+
+.bg-indigo-600 {
+    background-color: var(--theme-primary) !important;
+}
+
+.hover\:bg-indigo-700:hover {
+    background-color: var(--theme-primary-dark) !important;
+}
+
+.bg-indigo-50\/50,
+.bg-indigo-50 {
+    background-color: var(--theme-primary-soft) !important;
+}
+
+.text-indigo-600,
+.text-indigo-700,
+.text-indigo-900 {
+    color: var(--theme-primary) !important;
+}
+
+.border-indigo-100,
+.border-indigo-200 {
+    border-color: #99f6e4 !important;
+}
+
+.shadow-indigo-100,
+.shadow-indigo-200 {
+    --tw-shadow-color: rgba(15, 118, 110, 0.2) !important;
+}
+
+.focus\:ring-indigo-500:focus {
+    --tw-ring-color: var(--theme-primary) !important;
+}
+
+.hover\:border-indigo-500:hover {
+    border-color: var(--theme-primary) !important;
+}
+
+.hover\:bg-indigo-50\/50:hover {
+    background-color: #ecfdf5 !important;
+}
+
+.hover\:text-indigo-600:hover {
+    color: var(--theme-primary) !important;
+}
+
+.bg-orange-50\/50,
+.bg-orange-50 {
+    background-color: #fff7ed !important;
+}
+
+.text-orange-600,
+.text-orange-900 {
+    color: #c2410c !important;
+}
+
+.border-orange-100,
+.border-orange-200 {
+    border-color: #fed7aa !important;
+}
+
+.text-slate-400 {
+    color: #78909c !important;
+}
+
+.text-slate-500 {
+    color: var(--theme-muted) !important;
+}
+
+.text-slate-700 {
+    color: #334e68 !important;
+}
+
+.text-slate-800 {
+    color: #243b53 !important;
+}
+
+.text-slate-900 {
+    color: #102a43 !important;
+}
+
+.border-slate-100,
+.border-slate-200 {
+    border-color: var(--theme-border) !important;
+}
+
+.bg-slate-100 {
+    background-color: #e7f0ef !important;
+}
+
+.bg-slate-50 {
+    background-color: #f5faf9 !important;
+}
+
+.hover\:bg-slate-200:hover {
+    background-color: #d8e8e5 !important;
+}
+
+.text-rose-600 {
+    color: #be123c !important;
+}
+
+.hover\:bg-rose-50:hover {
+    background-color: #fff1f2 !important;
+}
+
+.tkb-empty-cell:hover {
+    background: #ecfdf5;
+    border-color: var(--theme-primary) !important;
+}
