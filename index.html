@@ -23,23 +23,20 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-slate-900">Thời khóa biểu</h1>
+                    <h1 class="text-xl font-bold text-slate-900">Thời khoá biểu</h1>
                     <p class="text-xs text-slate-400">Lên lịch học Sáng / Chiều trực quan</p>
                 </div>
             </div>
 
             <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-                <button id="openSettingsBtn" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-2xl text-sm font-semibold transition flex items-center gap-2">
-                    Cài đặt buổi & Giờ
-                </button>
                 <button id="exportBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-2xl text-sm font-semibold shadow-lg shadow-indigo-100 transition flex items-center gap-2">
-                    Lưu thời khóa biểu
+                    Tải xuống (PNG)
                 </button>
             </div>
         </header>
 
         <!-- Thanh điều khiển: Chọn khối lớp và các ngày trong tuần -->
-        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex flex-wrap justify-between items-start md:items-center gap-6">
             <div class="w-full md:w-72 space-y-1.5">
                 <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">CHỌN KHỐI / CẤP HỌC</label>
                 <select id="classSelect" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500">
@@ -70,15 +67,42 @@
                     <button class="day-chip active" data-day="8">CN</button>
                 </div>
             </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full md:order-2 md:basis-full">
+                <div class="space-y-1.5">
+                    <label for="inputHomeroomSession" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">GIỜ SINH HOẠT ĐẦU GIỜ</label>
+                    <select id="inputHomeroomSession" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="none">Không thêm</option>
+                        <option value="morning">Đầu buổi sáng</option>
+                        <option value="afternoon">Đầu buổi chiều</option>
+                        <option value="both">Cả sáng và chiều</option>
+                    </select>
+                </div>
+                <div class="space-y-1.5">
+                    <label for="inputPeriodNumbering" class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">CÁCH ĐÁNH SỐ TIẾT</label>
+                    <select id="inputPeriodNumbering" class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-3 text-sm font-semibold text-slate-700 outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="continuous">Liên tục: T1 đến T10</option>
+                        <option value="reset-afternoon">Đánh lại buổi chiều</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="openSettingsBtn" class="w-full md:w-auto md:order-1 shrink-0 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-2xl text-sm font-semibold transition flex items-center justify-center gap-2" aria-label="Cài đặt tiết học">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Cài đặt tiết học
+            </button>
         </div>
 
         <!-- Khu vực hiển thị bảng TKB chính (Vùng sẽ chụp ảnh) -->
         <div id="captureArea" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-100 shadow-sm space-y-6">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div class="flex items-center gap-3">
-                    <h3 id="scheduleTitle" class="text-lg font-bold text-slate-900">Lịch học chi tiết Sáng — Chiều</h3>
-                    <button type="button" id="editTitleBtn" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition">Sửa tên</button>
+            <div class="relative flex items-center justify-center min-h-10 text-center">
+                <div class="w-full px-24">
+                    <h3 id="scheduleTitle" class="text-lg font-bold text-slate-900 text-center">Lịch học chi tiết Sáng — Chiều</h3>
                 </div>
+                <button type="button" id="editTitleBtn" class="absolute right-0 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold transition">Sửa tên</button>
             </div>
 
             <div class="overflow-x-auto rounded-2xl border border-slate-200">
@@ -97,11 +121,11 @@
 
     </div>
 
-    <!-- Modal Cài đặt Số tiết & Khung giờ Sáng/Chiều -->
+    <!-- Modal cấu hình thời gian Sáng/Chiều -->
     <div id="settingsModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
         <div class="bg-white rounded-3xl p-8 w-full max-w-3xl shadow-2xl space-y-6 border border-slate-100 max-h-[92vh] overflow-y-auto">
             <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-slate-900">Cài đặt tiết & Khung giờ</h3>
+                <h3 class="text-lg font-bold text-slate-900">Cấu hình thời gian</h3>
                 <button type="button" id="closeSettingsModalBtn" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center font-bold hover:bg-slate-200">✕</button>
             </div>
             
@@ -109,17 +133,17 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-indigo-50/50 p-4 rounded-2xl border border-indigo-100 space-y-2">
                         <label class="block text-xs font-bold text-indigo-900 uppercase">Buổi Sáng (Số tiết)</label>
-                        <input type="number" id="inputMorningCount" min="0" max="6" value="4" class="w-full p-2.5 bg-white border border-indigo-200 rounded-xl text-sm font-bold text-indigo-700 outline-none">
+                        <input type="number" id="inputMorningCount" min="0" max="6" value="5" class="w-full p-2.5 bg-white border border-indigo-200 rounded-xl text-sm font-bold text-indigo-700 outline-none">
                     </div>
                     <div class="bg-orange-50/50 p-4 rounded-2xl border border-orange-100 space-y-2">
                         <label class="block text-xs font-bold text-orange-900 uppercase">Buổi Chiều (Số tiết)</label>
-                        <input type="number" id="inputAfternoonCount" min="0" max="6" value="4" class="w-full p-2.5 bg-white border border-orange-200 rounded-xl text-sm font-bold text-orange-700 outline-none">
+                        <input type="number" id="inputAfternoonCount" min="0" max="6" value="5" class="w-full p-2.5 bg-white border border-orange-200 rounded-xl text-sm font-bold text-orange-700 outline-none">
                     </div>
                 </div>
 
                 <div>
                     <h4 class="text-xs font-bold uppercase text-slate-400 mb-2">Tùy chỉnh thời gian từng tiết</h4>
-                    <div id="periodTimesConfig" class="space-y-2 max-h-96 overflow-y-auto pr-1">
+                    <div id="periodTimesConfig" class="space-y-2 pr-1">
                         <!-- Sinh tự động bằng JS -->
                     </div>
                 </div>
@@ -214,6 +238,12 @@
             <div id="alertButtons" class="flex gap-2 pt-2"></div>
         </div>
     </div>
+
+    <button id="backToTopBtn" type="button" class="fixed bottom-6 right-6 z-40 hidden h-12 w-12 items-center justify-center rounded-full bg-teal-700 text-white shadow-lg shadow-teal-900/20 transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2" aria-label="Về đầu trang" title="Về đầu trang">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
 
     <script src="script.js"></script>
 </body>

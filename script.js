@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     let config = JSON.parse(localStorage.getItem('my_tkb_config')) || {
-        morningCount: 4,
-        afternoonCount: 4,
+        morningCount: 5,
+        afternoonCount: 5,
+        periodNumbering: "continuous",
+        homeroomPeriod: false,
+        homeroomSession: "none",
         times: {
             "S1": { start: "07:00", end: "07:45" },
             "S2": { start: "07:50", end: "08:35" },
@@ -40,9 +43,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const presetSubjects = {
-        1: [{ name: "Tiếng Việt" }, { name: "Toán" }, { name: "Đạo đức" }, { name: "Tự nhiên và Xã hội" }, { name: "Mỹ thuật" }, { name: "Âm nhạc" }, { name: "Thể dục" }],
-        6: [{ name: "Toán" }, { name: "Ngữ văn" }, { name: "Tiếng Anh" }, { name: "Lịch sử & Địa lý" }, { name: "Khoa học tự nhiên" }, { name: "Tin học" }, { name: "GDCD" }, { name: "Công nghệ" }, { name: "Thể dục" }],
-        10: [{ name: "Toán" }, { name: "Ngữ văn" }, { name: "Tiếng Anh" }, { name: "Lịch sử" }, { name: "Địa lý" }, { name: "Vật lý" }, { name: "Hóa học" }, { name: "Sinh học" }, { name: "Tin học" }],
+        1: [{ name: "Tiếng Việt" }, { name: "Toán" }, { name: "Đạo đức" }, { name: "Tự nhiên và Xã hội" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Giáo dục thể chất" }, { name: "Hoạt động trải nghiệm" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 1" }],
+        2: [{ name: "Tiếng Việt" }, { name: "Toán" }, { name: "Đạo đức" }, { name: "Tự nhiên và Xã hội" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Giáo dục thể chất" }, { name: "Hoạt động trải nghiệm" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 1" }],
+        3: [{ name: "Tiếng Việt" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Đạo đức" }, { name: "Tự nhiên và Xã hội" }, { name: "Tin học" }, { name: "Công nghệ" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Giáo dục thể chất" }, { name: "Hoạt động trải nghiệm" }, { name: "Tiếng dân tộc thiểu số" }],
+        4: [{ name: "Tiếng Việt" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Đạo đức" }, { name: "Khoa học" }, { name: "Lịch sử và Địa lý" }, { name: "Tin học" }, { name: "Công nghệ" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Giáo dục thể chất" }, { name: "Hoạt động trải nghiệm" }, { name: "Tiếng dân tộc thiểu số" }],
+        5: [{ name: "Tiếng Việt" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Đạo đức" }, { name: "Khoa học" }, { name: "Lịch sử và Địa lý" }, { name: "Tin học" }, { name: "Công nghệ" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Giáo dục thể chất" }, { name: "Hoạt động trải nghiệm" }, { name: "Tiếng dân tộc thiểu số" }],
+        6: [{ name: "Ngữ văn" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Giáo dục công dân" }, { name: "Lịch sử và Địa lý" }, { name: "Khoa học tự nhiên" }, { name: "Công nghệ" }, { name: "Tin học" }, { name: "Giáo dục thể chất" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Hoạt động trải nghiệm và hướng nghiệp" }, { name: "Nội dung giáo dục địa phương" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 2" }],
+        7: [{ name: "Ngữ văn" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Giáo dục công dân" }, { name: "Lịch sử và Địa lý" }, { name: "Khoa học tự nhiên" }, { name: "Công nghệ" }, { name: "Tin học" }, { name: "Giáo dục thể chất" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Hoạt động trải nghiệm và hướng nghiệp" }, { name: "Nội dung giáo dục địa phương" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 2" }],
+        8: [{ name: "Ngữ văn" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Giáo dục công dân" }, { name: "Lịch sử và Địa lý" }, { name: "Khoa học tự nhiên" }, { name: "Công nghệ" }, { name: "Tin học" }, { name: "Giáo dục thể chất" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Hoạt động trải nghiệm và hướng nghiệp" }, { name: "Nội dung giáo dục địa phương" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 2" }],
+        9: [{ name: "Ngữ văn" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Giáo dục công dân" }, { name: "Lịch sử và Địa lý" }, { name: "Khoa học tự nhiên" }, { name: "Công nghệ" }, { name: "Tin học" }, { name: "Giáo dục thể chất" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Hoạt động trải nghiệm và hướng nghiệp" }, { name: "Nội dung giáo dục địa phương" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 2" }],
+        10: [{ name: "Ngữ văn" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Giáo dục thể chất" }, { name: "Giáo dục Quốc phòng và An ninh" }, { name: "Hoạt động trải nghiệm và hướng nghiệp" }, { name: "Nội dung giáo dục địa phương" }, { name: "Lịch sử" }, { name: "Địa lý" }, { name: "Giáo dục Kinh tế và Pháp luật" }, { name: "Vật lý" }, { name: "Hóa học" }, { name: "Sinh học" }, { name: "Công nghệ" }, { name: "Tin học" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 2" }],
+        11: [{ name: "Ngữ văn" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Giáo dục thể chất" }, { name: "Giáo dục Quốc phòng và An ninh" }, { name: "Hoạt động trải nghiệm và hướng nghiệp" }, { name: "Nội dung giáo dục địa phương" }, { name: "Lịch sử" }, { name: "Địa lý" }, { name: "Giáo dục Kinh tế và Pháp luật" }, { name: "Vật lý" }, { name: "Hóa học" }, { name: "Sinh học" }, { name: "Công nghệ" }, { name: "Tin học" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 2" }],
+        12: [{ name: "Ngữ văn" }, { name: "Toán" }, { name: "Ngoại ngữ 1" }, { name: "Giáo dục thể chất" }, { name: "Giáo dục Quốc phòng và An ninh" }, { name: "Hoạt động trải nghiệm và hướng nghiệp" }, { name: "Nội dung giáo dục địa phương" }, { name: "Lịch sử" }, { name: "Địa lý" }, { name: "Giáo dục Kinh tế và Pháp luật" }, { name: "Vật lý" }, { name: "Hóa học" }, { name: "Sinh học" }, { name: "Công nghệ" }, { name: "Tin học" }, { name: "Nghệ thuật - Âm nhạc" }, { name: "Nghệ thuật - Mỹ thuật" }, { name: "Tiếng dân tộc thiểu số" }, { name: "Ngoại ngữ 2" }],
         "dai-hoc": [{ name: "Giải tích" }, { name: "Đại số tuyến tính" }, { name: "Triết học Mác-Lênin" }, { name: "Lập trình Web" }, { name: "Cơ sở dữ liệu" }],
         "tu-do": [{ name: "Học ngoại ngữ" }, { name: "Đọc sách" }, { name: "Tập gym" }]
     };
@@ -127,6 +139,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const settingsModal = document.getElementById('settingsModal');
+    document.getElementById('inputHomeroomSession').value = getHomeroomSession();
+    document.getElementById('inputPeriodNumbering').value = config.periodNumbering || 'continuous';
     document.getElementById('openSettingsBtn').onclick = () => {
         document.getElementById('inputMorningCount').value = config.morningCount;
         document.getElementById('inputAfternoonCount').value = config.afternoonCount;
@@ -139,12 +153,28 @@ document.addEventListener('DOMContentLoaded', function() {
         settingsModal.classList.add('hidden');
     };
 
+    function getHomeroomSession() {
+        if (config.homeroomSession) return config.homeroomSession;
+        return config.homeroomPeriod ? 'morning' : 'none';
+    }
+
     function renderSettingsTimeInputs() {
         const container = document.getElementById('periodTimesConfig');
         container.innerHTML = '';
         let mCount = parseInt(document.getElementById('inputMorningCount').value) || 0;
         let aCount = parseInt(document.getElementById('inputAfternoonCount').value) || 0;
         let periodConfigs = [];
+
+        let homeroomSession = document.getElementById('inputHomeroomSession').value;
+        let periodNumbering = document.getElementById('inputPeriodNumbering').value;
+        let morningLessonCount = mCount - (homeroomSession === 'morning' || homeroomSession === 'both' ? 1 : 0);
+        if (homeroomSession === 'morning' || homeroomSession === 'both') {
+            periodConfigs.push({
+                key: 'SHD_M',
+                label: 'Sinh hoạt đầu giờ',
+                defaultTime: { start: "06:45", end: "07:00" }
+            });
+        }
 
         for (let i = 1; i <= mCount; i++) {
             periodConfigs.push({
@@ -153,16 +183,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 defaultTime: { start: "07:00", end: "07:45" }
             });
         }
+        if (homeroomSession === 'afternoon' || homeroomSession === 'both') {
+            periodConfigs.push({
+                key: 'SHD_A',
+                label: 'Sinh hoạt đầu giờ',
+                defaultTime: { start: "13:15", end: "13:30" }
+            });
+        }
         for (let i = 1; i <= aCount; i++) {
             periodConfigs.push({
                 key: `C${i}`,
-                label: `T${mCount + i}`,
+                label: periodNumbering === 'reset-afternoon' ? `T${i}` : `T${morningLessonCount + i}`,
                 defaultTime: { start: "13:30", end: "14:15" }
             });
         }
 
         periodConfigs.forEach(period => {
-            let t = config.times[period.key] || period.defaultTime;
+            let legacyTime = period.key === 'SHD_M' ? config.times.SHD : null;
+            let t = config.times[period.key] || legacyTime || period.defaultTime;
             container.innerHTML += `
                 <div class="flex items-center justify-between gap-2 bg-slate-50 p-2 rounded-xl text-xs">
                     <span class="font-bold w-16">Tiết ${period.label}</span>
@@ -176,10 +214,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('inputMorningCount').addEventListener('input', renderSettingsTimeInputs);
     document.getElementById('inputAfternoonCount').addEventListener('input', renderSettingsTimeInputs);
+    document.getElementById('inputHomeroomSession').addEventListener('change', renderSettingsTimeInputs);
+    document.getElementById('inputPeriodNumbering').addEventListener('change', renderSettingsTimeInputs);
 
     document.getElementById('saveSettingsBtn').onclick = () => {
         config.morningCount = parseInt(document.getElementById('inputMorningCount').value) || 0;
         config.afternoonCount = parseInt(document.getElementById('inputAfternoonCount').value) || 0;
+        config.homeroomSession = document.getElementById('inputHomeroomSession').value;
+        config.periodNumbering = document.getElementById('inputPeriodNumbering').value;
+        config.homeroomPeriod = config.homeroomSession !== 'none';
 
         const validTime = value => {
             if (!/^\d{2}:\d{2}$/.test(value)) return false;
@@ -210,13 +253,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getActivePeriodsList() {
         let list = [];
+        let homeroomSession = getHomeroomSession();
+        let periodNumbering = config.periodNumbering || 'continuous';
+        if (homeroomSession === 'morning' || homeroomSession === 'both') {
+            list.push({
+                id: 'SHD_M',
+                name: 'SHĐG',
+                time: config.times.SHD_M || config.times.SHD || { start: "06:45", end: "07:00" },
+                session: "morning"
+            });
+        }
         for (let i = 1; i <= config.morningCount; i++) {
             let key = `S${i}`;
-            list.push({ id: key, name: `T${list.length + 1}`, time: config.times[key] || { start: "", end: "" }, session: "morning" });
+            list.push({ id: key, name: `T${i}`, time: config.times[key] || { start: "", end: "" }, session: "morning" });
+        }
+        if (homeroomSession === 'afternoon' || homeroomSession === 'both') {
+            list.push({
+                id: 'SHD_A',
+                name: 'SHĐG',
+                time: config.times.SHD_A || { start: "13:15", end: "13:30" },
+                session: "afternoon"
+            });
         }
         for (let i = 1; i <= config.afternoonCount; i++) {
             let key = `C${i}`;
-            list.push({ id: key, name: `T${list.length + 1}`, time: config.times[key] || { start: "", end: "" }, session: "afternoon" });
+            let name = periodNumbering === 'reset-afternoon' ? `T${i}` : `T${config.morningCount + i}`;
+            list.push({ id: key, name, time: config.times[key] || { start: "", end: "" }, session: "afternoon" });
         }
         return list;
     }
@@ -284,8 +346,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let tbody = document.getElementById('tkbBody');
         tbody.innerHTML = '';
 
-        let mCount = config.morningCount;
-        let aCount = config.afternoonCount;
+        let homeroomSession = getHomeroomSession();
+        let mCount = config.morningCount + (homeroomSession === 'morning' || homeroomSession === 'both' ? 1 : 0);
+        let aCount = config.afternoonCount + (homeroomSession === 'afternoon' || homeroomSession === 'both' ? 1 : 0);
 
         periodsList.forEach((p, index) => {
             let tr = document.createElement('tr');
@@ -553,4 +616,14 @@ document.addEventListener('DOMContentLoaded', function() {
             editTitleBtn.style.display = previousTitleButtonDisplay;
         });
     };
+
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const updateBackToTopVisibility = () => {
+        backToTopBtn.classList.toggle('hidden', window.scrollY < 200);
+        backToTopBtn.classList.toggle('flex', window.scrollY >= 200);
+    };
+
+    window.addEventListener('scroll', updateBackToTopVisibility, { passive: true });
+    backToTopBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateBackToTopVisibility();
 });
